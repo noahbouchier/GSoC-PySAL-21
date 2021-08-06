@@ -7,7 +7,7 @@ from scipy.spatial import distance_matrix
 from scipy.interpolate import interp1d
 
 
-def divergence_profile(populations, geometries):
+def divergence_profile(populations, geodataframe):
     """
     Description of the function here.
 
@@ -16,7 +16,7 @@ def divergence_profile(populations, geometries):
     Arguments
     populations : form(s) of input
                   form(s) of input
-    geometries : form(s) of input
+    geodataframe : form(s) of input
                  form(s) of input
     selectioninput1 : form of input
         Description of what this is and what it does here.
@@ -32,11 +32,14 @@ def divergence_profile(populations, geometries):
     Basic written example here, using test data if possible or
     creating simple dataframe to run
     """
+    # Extract populations
+    populations = np.zeros((len(geodataframe), len(populations)))
+    for j in range(len(populations)):
+        populations[:, j] = list(map(float, geodataframe[populations[j]]))
+
     # Creating a distance matrix
-    centroids = geometries.geometry.centroid
-
+    centroids = geodataframe.geometry.centroid
     centroid_coords = np.column_stack((centroids.x, centroids.y))
-
     dist_matrix = distance_matrix(centroid_coords, centroid_coords)
 
     # Preparing list for results
@@ -47,21 +50,14 @@ def divergence_profile(populations, geometries):
 
         # Creating the q and r objects
         sorted_indices = np.argsort(distances)
-
         cumul_pop_by_group = np.cumsum(populations[sorted_indices], axis=0)
-
         obs_cumul_pop = np.sum(cumul_pop_by_group, axis=1)[:, np.newaxis]
-
         Q_cumul_proportions = cumul_pop_by_group / obs_cumul_pop
-
         total_pop_by_group = np.sum(populations, axis=0, keepdims=True)
-
         total_pop = np.sum(populations)
-
         R_total_proportions = total_pop_by_group / total_pop
 
         # Input q and r objects into relative entropy (KL divergence) function
-
         kl_div_profile = scipy.special.rel_entr(Q_cumul_proportions,
                                                 R_total_proportions).sum(axis=1)
 
