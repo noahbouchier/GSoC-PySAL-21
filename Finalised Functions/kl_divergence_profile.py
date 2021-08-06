@@ -33,9 +33,7 @@ def divergence_profile(populations, geodataframe):
     creating simple dataframe to run
     """
     # Extract populations
-    populations = np.zeros((len(geodataframe), len(populations)))
-    for j in range(len(populations)):
-        populations[:, j] = list(map(float, geodataframe[populations[j]]))
+    populations = geodataframe[populations].values.astype(float)
 
     # Creating a distance matrix
     centroids = geodataframe.geometry.centroid
