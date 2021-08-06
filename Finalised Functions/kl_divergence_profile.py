@@ -73,4 +73,4 @@ def divergence_profile(populations, geodataframe):
         # Append (bring together) all outputs into results list
         results.append(output)
 
-        return(output)
+    return(pd.concat(results))
