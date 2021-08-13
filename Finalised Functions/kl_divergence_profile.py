@@ -2,8 +2,9 @@ import numpy as np
 import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
-import scipy.spatial
+
 from scipy.spatial import distance_matrix
+from scipy.special import rel_entr as relative_entropy
 from scipy.interpolate import interp1d
 
 
@@ -48,26 +49,26 @@ def divergence_profile(populations, geodataframe):
 
         # Creating the q and r objects
         sorted_indices = np.argsort(distances)
-        cumul_pop_by_group = np.cumsum(populations[sorted_indices], axis=0)
-        obs_cumul_pop = np.sum(cumul_pop_by_group, axis=1)[:, np.newaxis]
+        cumul_pop_by_group = np.cumsum(populations[sorted_indices], axis = 0)
+        obs_cumul_pop = np.sum(cumul_pop_by_group, axis = 1)[:, np.newaxis]
         Q_cumul_proportions = cumul_pop_by_group / obs_cumul_pop
-        total_pop_by_group = np.sum(populations, axis=0, keepdims=True)
+        total_pop_by_group = np.sum(populations, axis = 0, keepdims = True)
         total_pop = np.sum(populations)
         R_total_proportions = total_pop_by_group / total_pop
 
         # Input q and r objects into relative entropy (KL divergence) function
-        kl_div_profile = scipy.special.rel_entr(Q_cumul_proportions,
-                                                R_total_proportions).sum(axis=1)
+        kl_div_profile = relative_entropy(Q_cumul_proportions,
+                                          R_total_proportions).sum(axis=1)
 
         # Creating object for population at each distance
         pop_within_dist = obs_cumul_pop.sum(axis=1)
 
         # Creating an output dataframe
         output = pd.DataFrame().from_dict(dict(
-            observation=i,
-            distance=distances[sorted_indices],
-            divergence=kl_div_profile.round(decimals=6),
-            pop_within_dist=pop_within_dist
+            observation = i,
+            distance = distances[sorted_indices],
+            divergence = kl_div_profile,
+            nearby_population = pop_within_dist
         ))
 
         # Append (bring together) all outputs into results list
