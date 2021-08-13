@@ -6,76 +6,71 @@ import scipy.spatial
 from scipy.spatial import distance_matrix
 from scipy.interpolate import interp1d
 
-def divergence_profile(populations, geometries):
+
+def divergence_profile(populations, geodataframe):
     """
     Description of the function here.
-    
+
     Reference to paper here.
-    
+
     Arguments
     populations : form(s) of input
                   form(s) of input
-    geometries : form(s) of input
+    geodataframe : form(s) of input
                  form(s) of input
     selectioninput1 : form of input
         Description of what this is and what it does here.
     selectioninput2 : form of input
         Description of what this is and what it does here.
-    
+
     Returns
     ----------
     Description of the format of return
-    
+
     Example
     ----------
-    Basic written example here, using test data if possible or creating simple dataframe to run
+    Basic written example here, using test data if possible or
+    creating simple dataframe to run
     """
+    # Extract populations
+    populations = geodataframe[populations].values.astype(float)
+
     # Creating a distance matrix
-    centroids = geometries.geometry.centroid
-
+    centroids = geodataframe.geometry.centroid
     centroid_coords = np.column_stack((centroids.x, centroids.y))
-
     dist_matrix = distance_matrix(centroid_coords, centroid_coords)
-    
+
     # Preparing list for results
     results = []
-    
+
     # Loop to calculate KL divergence profile
     for (i, distances) in enumerate(dist_matrix):
 
-        ## Creating the q and r objects
+        # Creating the q and r objects
         sorted_indices = np.argsort(distances)
-    
-        cumul_pop_by_group = np.cumsum(populations
-                              [sorted_indices], axis = 0)
-
-        obs_cumul_pop = np.sum(cumul_pop_by_group, axis = 1)[:,np.newaxis]
-
+        cumul_pop_by_group = np.cumsum(populations[sorted_indices], axis=0)
+        obs_cumul_pop = np.sum(cumul_pop_by_group, axis=1)[:, np.newaxis]
         Q_cumul_proportions = cumul_pop_by_group / obs_cumul_pop
-
-        total_pop_by_group = np.sum(populations, axis = 0, keepdims=True)
-
+        total_pop_by_group = np.sum(populations, axis=0, keepdims=True)
         total_pop = np.sum(populations)
-
         R_total_proportions = total_pop_by_group / total_pop
 
-        ## Inputting the q and r objects into relative entropy (KL divergence) function
+        # Input q and r objects into relative entropy (KL divergence) function
+        kl_div_profile = scipy.special.rel_entr(Q_cumul_proportions,
+                                                R_total_proportions).sum(axis=1)
 
-        kl_div_profile = scipy.special.rel_entr(Q_cumul_proportions, 
-                                                R_total_proportions).sum(axis = 1)
-        
-        ## Creating object for population at each distance
+        # Creating object for population at each distance
         pop_within_dist = obs_cumul_pop.sum(axis=1)
 
-        ## Creating an output dataframe
+        # Creating an output dataframe
         output = pd.DataFrame().from_dict(dict(
-            observation = i,
-            distance = distances[sorted_indices],
-            divergence = kl_div_profile.round(decimals = 6),
-            pop_within_dist = pop_within_dist
+            observation=i,
+            distance=distances[sorted_indices],
+            divergence=kl_div_profile.round(decimals=6),
+            pop_within_dist=pop_within_dist
         ))
-        
-        ## Append (bring together) all outputs into results list
+
+        # Append (bring together) all outputs into results list
         results.append(output)
-    
-        print(output)
+
+    return(pd.concat(results))
