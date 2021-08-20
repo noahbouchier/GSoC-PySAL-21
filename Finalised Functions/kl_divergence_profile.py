@@ -80,7 +80,7 @@ def kl_divergence_profile(populations, coordinates = None, metric = 'euclidean')
     # Preparing list for results
     results = []
 
-    # Loop to calculate KL divergence profile
+    # Loop to calculate KL divergence
     for (i, distances) in enumerate(dist_matrix):
 
         # Creating the q and r objects
@@ -93,18 +93,15 @@ def kl_divergence_profile(populations, coordinates = None, metric = 'euclidean')
         r_total_proportions = total_pop_by_group / total_pop
 
         # Input q and r objects into relative entropy (KL divergence) function
-        kl_div_profile = relative_entropy(q_cumul_proportions,
-                                          r_total_proportions).sum(axis = 1)
-
-        # Creating object for population at each distance
-        pop_within_dist = obs_cumul_pop.sum(axis=1)
+        kl_divergence = relative_entropy(q_cumul_proportions,
+                                         r_total_proportions).sum(axis = 1)
 
         # Creating an output dataframe
         output = pd.DataFrame().from_dict(dict(
             observation = indices[i],
             distance = distances[sorted_indices],
-            divergence = kl_div_profile,
-            nearby_population = pop_within_dist
+            divergence = kl_divergence,
+            population_covered = obs_cumul_pop.sum(axis=1)
         ))
 
         # Append (bring together) all outputs into results list
