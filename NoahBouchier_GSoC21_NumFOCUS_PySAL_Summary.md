@@ -6,8 +6,9 @@ To NumFOCUS, Google, or anyone else interested in reading a summary of my experi
 
 # Key links
 
-- ***Completed function within GitHub Pull Request*** - *Upcoming*
-- ***Completed documentation within GitHub Pull Request*** - *Upcoming*
+- ***[Pull Request to add function and documentation to PySAL segregation package](https://github.com/pysal/segregation/pull/185)***
+- ***[Completed function](https://github.com/noahbouchier/segregation/blob/master/segregation/spatial/kl_divergence_profile.py)***
+- ***[Completed documentation](https://github.com/noahbouchier/segregation/blob/master/notebooks/kl_divergence_profile_walkthrough.ipynb)
 
 
 - [GSoC project page](https://summerofcode.withgoogle.com/projects/#6509416444067840)
