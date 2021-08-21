@@ -1,4 +1,8 @@
-Hi there :wave: to NumFOCUS, Google, or anyone else interested in reading a summary of my experience with Google Summer of Code (GSoC)!
+# Noah Bouchier - Google Summer of Code summary
+
+Hey there :wave: ,
+
+To NumFOCUS, Google, or anyone else interested in reading a summary of my experience with Google Summer of Code (GSoC), welcome!
 
 # Key links
 
@@ -6,8 +10,8 @@ Hi there :wave: to NumFOCUS, Google, or anyone else interested in reading a summ
 - ***Completed documentation within GitHub Pull Request*** - *Upcoming*
 
 
-- [GitHub repository for project](https://github.com/noahbouchier/GSoC-PySAL-21)
 - [GSoC project page](https://summerofcode.withgoogle.com/projects/#6509416444067840)
+- [GitHub repository for project](https://github.com/noahbouchier/GSoC-PySAL-21)
 - [Personal blog of project](https://noahbouchier.github.io/blog/gsoc/)
 
 # Personal reflection and gratitude
@@ -25,7 +29,7 @@ The goal of this project was to create a function that implemented the methodolo
 Following the completion of the Google Summer of Code, this function has been created, and is now in the process of being implemented into the PySAL library. The release of this code, at the end of GSoC, can be seen below:
 
 <details>
-  <summary>KL Divergence Profile function - end of GSoC '21 code release</summary>
+  <summary>**KL Divergence Profile function - end of GSoC '21 code release**</summary>
 
 ``` python
 import numpy as np
