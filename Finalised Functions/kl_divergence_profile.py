@@ -18,6 +18,7 @@ def kl_divergence_profile(populations, coordinates = None, metric = 'euclidean')
     Arguments
     ----------
     populations : GeoPandas GeoDataFrame object
+                  GeoPandas DataFrame object
                   NumPy Array object
                   Population information of raw group numbers (not percentages) to be
                   included in the analysis.
@@ -34,6 +35,15 @@ def kl_divergence_profile(populations, coordinates = None, metric = 'euclidean')
 
     Returns
     ----------
+    observation : an identifier of the area that forms the centre of the aggregation
+                  of population, from which the divergence is calculated.
+    distance : how far the most recently aggregated area is from the 'observation'
+               area, starting at zero for each observation to represent that only the
+               'observation' area being aggregated.
+    divergence : the KL divergence measure, between the aggregated population and the
+                 total population, will converge to zero for the final row of each
+                 observation to represent that the total population is covered.
+    population_covered : the population count within the aggregated population.
     Returns a concatenated object of Pandas dataframes. Each dataframe contains a
     set of divergence levels between an area and the total population. These areas
     become consecutively larger, starting from a single location and aggregating
